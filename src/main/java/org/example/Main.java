@@ -24,6 +24,9 @@ public class Main {
                     queue2.put(generateText("abc", 100_000)); // put добавляет, если может, иначе спит
                     queue3.put(generateText("abc", 100_000));
                     Thread.sleep(100);
+//                    System.out.println("Queues put() " + queue1);
+//                    System.out.println("Queues put() " + queue2);
+//                    System.out.println("Queues put() " + queue3);
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
                 }
@@ -31,44 +34,53 @@ public class Main {
         });
 
         Thread thread1 = new Thread(() -> {
-            try {
-                String currentStr = queue1.take();
-                long currentMaxA = currentStr.chars().filter(ch -> ch == 'a').count();
-                if (currentMaxA > maxA) {
-                    maxA = currentMaxA;
-                    maxAStr = currentStr;
+            for (int i = 0; i < 100; i++) {
+                try {
+                    String currentStr = queue1.take();
+                    long currentMaxA = currentStr.chars().filter(ch -> ch == 'a').count();
+                    if (currentMaxA > maxA) {
+                        maxA = currentMaxA;
+                        maxAStr = currentStr;
+                    }
+                    Thread.sleep(150);
+//                    System.out.println("Queue1 take()" + queue1);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
                 }
-                Thread.sleep(150);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
             }
         });
 
         Thread thread2 = new Thread(() -> {
-            try {
-                String currentStr = queue2.take();
-                long currentMaxA = currentStr.chars().filter(ch -> ch == 'b').count();
-                if (currentMaxA > maxB) {
-                    maxB = currentMaxA;
-                    maxBStr = currentStr;
+            for (int i = 0; i < 100; i++) {
+                try {
+                    String currentStr = queue2.take();
+                    long currentMaxA = currentStr.chars().filter(ch -> ch == 'b').count();
+                    if (currentMaxA > maxB) {
+                        maxB = currentMaxA;
+                        maxBStr = currentStr;
+                    }
+                    Thread.sleep(150);
+//                    System.out.println("Queue2 take()" + queue2);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
                 }
-                Thread.sleep(150);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
             }
         });
 
         Thread thread3 = new Thread(() -> {
-            try {
-                String currentStr = queue3.take();
-                long currentMaxA = currentStr.chars().filter(ch -> ch == 'c').count();
-                if (currentMaxA > maxC) {
-                    maxC = currentMaxA;
-                    maxCStr = currentStr;
+            for (int i = 0; i < 100; i++) {
+                try {
+                    String currentStr = queue3.take();
+                    long currentMaxA = currentStr.chars().filter(ch -> ch == 'c').count();
+                    if (currentMaxA > maxC) {
+                        maxC = currentMaxA;
+                        maxCStr = currentStr;
+                    }
+                    Thread.sleep(150);
+//                    System.out.println("Queue3 take()" + queue3);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
                 }
-                Thread.sleep(150);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
             }
         });
 
@@ -77,10 +89,11 @@ public class Main {
         thread2.start();
         thread3.start();
 
+        thread0.join();
         thread3.join();
         thread2.join();
         thread1.join();
-        thread0.join();
+
 
         System.out.println("Максимум a " + maxA + ": " + maxAStr);
         System.out.println("************************************************************************");
