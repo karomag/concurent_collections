@@ -2,7 +2,6 @@ package org.example;
 
 import java.util.Random;
 import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.atomic.AtomicLong;
 
 public class Main {
 
@@ -39,20 +38,20 @@ public class Main {
     }
 
     private static Thread getThread(ArrayBlockingQueue<String> queue, char ch) {
-        AtomicLong maxCh = new AtomicLong();
         return new Thread(() -> {
+            long maxCh = 0;
             while (textsThread.isAlive()) {
                 try {
                     String currentStr = queue.take();
                     long currentMaxA = currentStr.chars().filter(x -> x == ch).count();
-                    if (currentMaxA > maxCh.get()) {
-                        maxCh.set(currentMaxA);
+                    if (currentMaxA > maxCh) {
+                        maxCh = currentMaxA;
                     }
                     Thread.sleep(150);
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
                 }
-            };
+            }
             System.out.println("Максимум " + ch + ": " + maxCh);
         });
     }
